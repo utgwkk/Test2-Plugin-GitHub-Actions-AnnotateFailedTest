@@ -23,6 +23,8 @@ jobs:
         with:
           path: local
           key: ${{ matrix.os }}-${{ matrix.perl-version }}-${{ hashFiles('cpanfile') }}
+          restore-keys: |
+            ${{ matrix.os }}-
 
       - run: cpm install --with-test
 
