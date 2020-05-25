@@ -37,6 +37,12 @@ sub listener {
     my $line = $trace->line // 0;
     my $detail = encode_utf8 $event->summary; # avoid Wide character in print warning
 
+    _issue_error($file, $line, $detail);
+}
+
+sub _issue_error {
+    my ($file, $line, $detail) = @_;
+
     my $stderr = test2_stderr();
 
     if (length $detail) {
