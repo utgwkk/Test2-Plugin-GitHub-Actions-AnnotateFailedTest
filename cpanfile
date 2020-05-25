@@ -7,6 +7,8 @@ requires 'Test2::API';
 requires 'URI::Escape';
 
 on 'test' => sub {
+    requires 'Module::Spy';
     requires 'Test::More', '0.98';
+    requires 'Test2::V0';
 };
 
