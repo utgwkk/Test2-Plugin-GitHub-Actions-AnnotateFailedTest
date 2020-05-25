@@ -17,6 +17,13 @@ jobs:
         with:
           perl-version: ${{ matrix.perl-version }}
 
-      - run: cpanm --installdeps .
+      - run: cpanm App::cpm
+
+      - uses: actions/cache@v1
+        with:
+          path: local
+          key: ${{ matrix.os }}-${{ matrix.perl-version }}-${{ hashFiles('cpanfile') }}
+
+      - run: cpm install --with-test
 
       - run: prove -lv t
