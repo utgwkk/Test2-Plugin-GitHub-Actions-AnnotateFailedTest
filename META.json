@@ -42,6 +42,10 @@
       },
       "runtime" : {
          "requires" : {
+            "Encode" : "0",
+            "Test2" : "1.302133",
+            "Test2::API" : "0",
+            "URI::Escape" : "0",
             "perl" : "5.008001"
          }
       },
