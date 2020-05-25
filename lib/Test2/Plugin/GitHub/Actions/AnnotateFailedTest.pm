@@ -62,13 +62,15 @@ __END__
 
 Test2::Plugin::GitHub::Actions::AnnotateFailedTest - Annotate failed tests with GitHub Actions workflow command
 
-=head1 SYNOPSIS
-
-    use Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
-
 =head1 DESCRIPTION
 
-Test2::Plugin::GitHub::Actions::AnnotateFailedTest is ...
+This plugin provides annotations to the line of falied tests for GitHub Actions workflow.
+
+=head1 SYNOPSIS
+
+Just use this module and run tests. Note that this plugin is enabled only in a GitHub Actions workflow.
+
+    use Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
 
 =head1 LICENSE
 
