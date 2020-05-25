@@ -8,7 +8,7 @@ my $line;
 
 my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
 
-intercept {
+my $event = intercept {
     local $ENV{GITHUB_ACTIONS} = 'true';
     require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
     Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
@@ -18,6 +18,10 @@ intercept {
 };
 my $call = $g->calls_most_recent;
 undef $g;
+
+like $event, array {
+    item event 'Ok';
+};
 
 is $call, [$file, $line, 'failed'], 'annotate with error';
 
