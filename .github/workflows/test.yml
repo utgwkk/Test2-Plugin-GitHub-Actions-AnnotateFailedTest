@@ -17,16 +17,6 @@ jobs:
         with:
           perl-version: ${{ matrix.perl-version }}
 
-      - run: cpanm App::cpm
-
-      - uses: actions/cache@v1
-        with:
-          path: local
-          key: ${{ matrix.os }}-${{ matrix.perl-version }}-${{ hashFiles('cpanfile') }}
-          restore-keys: |
-            ${{ matrix.os }}-
-            ${{ matrix.os }}-${{ matrix.perl-version }}-
-
-      - run: cpm install --with-requires --with-test
+      - run: cpanm --installdeps .
 
       - run: prove -Ilocal -Ilib -lv t
