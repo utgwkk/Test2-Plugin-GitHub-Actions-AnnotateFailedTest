@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Annotate failed tests with GitHub Actions workflow command",
    "author" : [
       "utgwkk <utagawakiki@gmail.com>"
    ],

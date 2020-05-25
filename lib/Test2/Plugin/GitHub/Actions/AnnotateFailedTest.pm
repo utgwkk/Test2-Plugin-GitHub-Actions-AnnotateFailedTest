@@ -60,7 +60,7 @@ __END__
 
 =head1 NAME
 
-Test2::Plugin::GitHub::Actions::AnnotateFailedTest - It's new $module
+Test2::Plugin::GitHub::Actions::AnnotateFailedTest - Annotate failed tests with GitHub Actions workflow command
 
 =head1 SYNOPSIS
 
