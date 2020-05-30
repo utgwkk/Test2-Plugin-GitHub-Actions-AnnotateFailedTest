@@ -33,11 +33,20 @@ sub listener {
     return unless $event->causes_fail;
 
     my $trace = $event->trace;
+    my $summary = $event->summary;
     my $file = $trace->file // '<no name>';
     my $line = $trace->line // 0;
-    my $message = encode_utf8 $event->summary; # avoid Wide character in print warning
+    my $details = _extract_details_from_event($event);
+    my $message = encode_utf8(defined $details ? "$summary\n$details" : $summary); # avoid Wide character in print warning
 
     _issue_error($file, $line, $message);
+}
+
+sub _extract_details_from_event {
+    my ($event) = @_;
+
+    return undef unless exists $event->{info};
+    return join "\n", map { $_->{details} } @{$event->{info}};
 }
 
 sub _issue_error {
