@@ -17,7 +17,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: local
-          key: local-${{ runner.os }}-${{ runner.perl-version }}
+          key: local-${{ runner.os }}-${{ runner.perl-version }}-${{ hashFiles('cpanfile') }}
           restore-keys: |
             local-${{ runner.os }}-
 
