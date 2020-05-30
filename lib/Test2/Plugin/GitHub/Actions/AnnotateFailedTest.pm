@@ -33,11 +33,11 @@ sub listener {
     return unless $event->causes_fail;
 
     my $trace = $event->trace;
-    my $name = $event->name;
+    my $name = $event->name =~ /Nameless Assertion/ ? '' : $event->name;
     my $file = $trace->file // '<no name>';
     my $line = $trace->line // 0;
     my $details = _extract_details_from_event($event);
-    my $message = encode_utf8(defined $details ? "$name\n$details" : $name); # avoid Wide character in print warning
+    my $message = encode_utf8(join "\n", grep { defined } ($name, $details)); # avoid Wide character in print warning
 
     _issue_error($file, $line, $message);
 }
