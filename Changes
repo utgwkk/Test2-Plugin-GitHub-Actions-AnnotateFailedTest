@@ -2,6 +2,8 @@ Revision history for Perl extension Test2-Plugin-GitHub-Actions-AnnotateFailedTe
 
 {{$NEXT}}
 
+    - Annotate with detailed message for assertion (with Test2::V0)
+
 0.01 2020-05-26T03:59:41Z
 
     - First release
