@@ -29,4 +29,4 @@ jobs:
 
       - run: cpanm -L local --installdeps .
 
-      - run: prove -Ilocal -Ilib -lv t
+      - run: prove -Ilocal/lib/perl5 -Ilib -lv t
