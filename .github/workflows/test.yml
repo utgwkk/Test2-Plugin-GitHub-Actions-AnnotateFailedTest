@@ -17,10 +17,10 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: local
-          key: local-${{ runner.os }}-${{ runner.perl-version }}-${{ hashFiles('cpanfile') }}
+          key: local-${{ runner.os }}-${{ matrix.perl-version }}-${{ hashFiles('cpanfile') }}
           restore-keys: |
             local-${{ runner.os }}-
-            local-${{ runner.os }}-${{ runner.perl-version }}-
+            local-${{ runner.os }}-${{ matrix.perl-version }}-
 
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
