@@ -19,7 +19,6 @@ jobs:
           path: local
           key: local-${{ runner.os }}-${{ matrix.perl-version }}-${{ hashFiles('cpanfile') }}
           restore-keys: |
-            local-${{ runner.os }}-
             local-${{ runner.os }}-${{ matrix.perl-version }}-
 
       - name: Set up Perl
