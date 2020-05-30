@@ -46,6 +46,8 @@ sub _extract_summary_from_event {
     my ($event) = @_;
 
     my $name_or_summary = $event->isa('Test2::Event::Fail') ? $event->name : $event->summary;
+    # avoid uninitialized warning for regexp matching
+    $name_or_summary //= '';
     return $name_or_summary =~ /Nameless Assertion/ ? '' : $name_or_summary;
 }
 
