@@ -35,9 +35,9 @@ sub listener {
     my $trace = $event->trace;
     my $file = $trace->file // '<no name>';
     my $line = $trace->line // 0;
-    my $detail = encode_utf8 $event->summary; # avoid Wide character in print warning
+    my $message = encode_utf8 $event->summary; # avoid Wide character in print warning
 
-    _issue_error($file, $line, $detail);
+    _issue_error($file, $line, $message);
 }
 
 sub _issue_error {
