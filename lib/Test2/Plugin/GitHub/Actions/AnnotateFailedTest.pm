@@ -33,13 +33,20 @@ sub listener {
     return unless $event->causes_fail;
 
     my $trace = $event->trace;
-    my $name = $event->name =~ /Nameless Assertion/ ? '' : $event->name;
+    my $summary = _extract_summary_from_event($event);
     my $file = $trace->file // '<no name>';
     my $line = $trace->line // 0;
     my $details = _extract_details_from_event($event);
-    my $message = encode_utf8(join "\n", grep { defined } ($name, $details)); # avoid Wide character in print warning
+    my $message = encode_utf8(join "\n", grep { defined } ($summary, $details)); # avoid Wide character in print warning
 
     _issue_error($file, $line, $message);
+}
+
+sub _extract_summary_from_event {
+    my ($event) = @_;
+
+    my $name_or_summary = $event->isa('Test2::Event::Fail') ? $event->name : $event->summary;
+    return $name_or_summary =~ /Nameless Assertion/ ? '' : $name_or_summary;
 }
 
 sub _extract_details_from_event {
