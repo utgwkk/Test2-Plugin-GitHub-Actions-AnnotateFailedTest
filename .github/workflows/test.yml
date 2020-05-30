@@ -14,11 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/cache@v2
+        with:
+          path: local
+          key: local-${{ runner.os }}-${{ runner.perl-version }}
+          restore-keys: |
+            local-${{ runner.os }}-
+
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl-version }}
 
-      - run: cpanm --installdeps .
+      - run: cpanm -L local --installdeps .
 
       - run: prove -Ilocal -Ilib -lv t
