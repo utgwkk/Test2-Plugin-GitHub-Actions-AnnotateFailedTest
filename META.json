@@ -71,7 +71,7 @@
          "web" : "https://github.com/utgwkk/Test2-Plugin-GitHub-Actions-AnnotateFailedTest"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_serialization_backend" : "JSON::PP version 4.02",
    "x_static_install" : 1
 }
