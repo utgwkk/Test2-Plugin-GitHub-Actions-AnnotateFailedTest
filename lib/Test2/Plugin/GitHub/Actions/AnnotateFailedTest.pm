@@ -11,7 +11,7 @@ use Test2::API qw(
 );
 use URI::Escape qw(uri_escape);
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 sub import {
     my ($class) = @_;
