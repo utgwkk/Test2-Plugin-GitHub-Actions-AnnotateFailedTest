@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: build-log
-          path: C:\Users\*\.cpanm\work\.cpanm\work\*\build.log
+          path: C:\Users\*\.cpanm\work\*\build.log
 
       - run: ls
 
