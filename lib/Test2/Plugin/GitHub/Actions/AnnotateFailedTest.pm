@@ -34,8 +34,8 @@ sub listener {
 
     my $trace = $event->trace;
     my $summary = _extract_summary_from_event($event);
-    my $file = $trace->file // '<no name>';
-    my $line = $trace->line // 0;
+    my $file = $trace->file || '<no name>';
+    my $line = $trace->line || 0;
     my $details = _extract_details_from_event($event);
     my $message = encode_utf8(join "\n", grep { defined } ($summary, $details)); # avoid Wide character in print warning
 
@@ -47,7 +47,7 @@ sub _extract_summary_from_event {
 
     my $name_or_summary = $event->isa('Test2::Event::Fail') ? $event->name : $event->summary;
     # avoid uninitialized warning for regexp matching
-    $name_or_summary //= '';
+    $name_or_summary ||= '';
     if ($name_or_summary =~ /Nameless Assertion/ || ! length $name_or_summary) {
         return 'Test failed';
     } else {
