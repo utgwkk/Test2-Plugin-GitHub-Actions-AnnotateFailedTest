@@ -28,6 +28,8 @@ jobs:
           name: build-log
           path: ~/.cpanm/work/*/build.log
 
+      - run: ls -lA
+
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
