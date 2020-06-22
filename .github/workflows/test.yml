@@ -21,6 +21,13 @@ jobs:
           restore-keys: |
             local-${{ runner.os }}-${{ matrix.perl-version }}-
 
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl-version }}
+
+      - run: cpanm -L local --installdeps .
+
       - name: Show build log (if failed)
         if: failure()
         uses: actions/upload-artifact@v1
@@ -28,13 +35,6 @@ jobs:
           name: build-log
           path: ~/.cpanm/work/*/build.log
 
-      - run: ls -lA
-
-      - name: Set up Perl
-        uses: shogo82148/actions-setup-perl@v1
-        with:
-          perl-version: ${{ matrix.perl-version }}
-
-      - run: cpanm -L local --installdeps .
+      - run: ls
 
       - run: prove -Ilocal/lib/perl5 -Ilib -lv t
