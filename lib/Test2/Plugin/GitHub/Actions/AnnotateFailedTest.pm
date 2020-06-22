@@ -1,7 +1,6 @@
 package Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
 use strict;
 use warnings;
-use feature qw(state);
 
 use Encode qw(encode_utf8);
 use Test2::API qw(
@@ -13,13 +12,13 @@ use URI::Escape qw(uri_escape);
 
 our $VERSION = "0.04";
 
+my $loaded = 0;
+
 sub import {
     my ($class) = @_;
 
     return unless $ENV{GITHUB_ACTIONS};
-    state $loaded = 0; # avoid multiple callback addition
-    return if $loaded;
-    $loaded++;
+    return if $loaded++; # avoid multiple callback addition
 
     test2_add_callback_post_load(sub {
         my $hub = test2_stack()->top;
