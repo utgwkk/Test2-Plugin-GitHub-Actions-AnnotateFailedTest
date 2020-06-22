@@ -21,6 +21,13 @@ jobs:
           restore-keys: |
             local-${{ runner.os }}-${{ matrix.perl-version }}-
 
+      - name: Show build log (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v1
+        with:
+          name: build-log
+          path: ~/.cpanm/work/*/build.log
+
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
