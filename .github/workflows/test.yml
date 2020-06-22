@@ -28,12 +28,12 @@ jobs:
 
       - run: cpanm -L local --installdeps .
 
-      - name: Show build log (if failed)
+      - name: Upload build log (if failed) from ${{ env.HOME }}/.cpanm/work/*/build.log
         if: failure()
         uses: actions/upload-artifact@v1
         with:
           name: build-log
-          path: ~/.cpanm/work/*/build.log
+          path: ${{ env.HOME }}/.cpanm/work/*/build.log
 
       - run: ls
 
