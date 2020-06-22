@@ -72,6 +72,9 @@
       }
    },
    "version" : "0.03",
+   "x_contributors" : [
+      "hitode909 <hitode909@gmail.com>"
+   ],
    "x_serialization_backend" : "JSON::PP version 4.02",
    "x_static_install" : 1
 }
