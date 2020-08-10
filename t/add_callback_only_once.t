@@ -1,20 +1,32 @@
 use strict;
 use warnings;
 use Test2::V0;
-use Module::Spy qw(spy_on);
+use Test2::Plugin::IOEvents;
+use Test2::API qw(test2_reset_io);
+test2_reset_io();
 
-my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
-
-intercept {
+my $file = __FILE__;
+my $line;
+my $events = intercept {
     local $ENV{GITHUB_ACTIONS} = 'true';
+
     for (1..3) {
         require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
         Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
     }
 
+    $line = __LINE__ + 1;
     ok 0, 'failed';
 };
 
-is $g->calls_count, 1, 'annotate only once';
+is $events, array {
+    event 'Ok';
+    event Output => sub {
+        field stream_name => 'STDERR';
+        call message => "::error file=$file,line=$line\::failed\n";
+    };
+    event 'Diag';
+    end;
+};
 
 done_testing;

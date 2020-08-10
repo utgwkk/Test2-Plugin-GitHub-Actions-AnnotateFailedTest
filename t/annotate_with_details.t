@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 use Test2::V0;
-use Module::Spy qw(spy_on);
+use Test2::Plugin::IOEvents;
+use Test2::API qw(test2_reset_io);
+test2_reset_io();
 
 my $file = __FILE__;
 my $line;
 
-my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
-
-my $event = intercept {
+my $events = intercept {
     local $ENV{GITHUB_ACTIONS} = 'true';
     require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
     Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
@@ -16,13 +16,18 @@ my $event = intercept {
     $line = __LINE__ + 1;
     is 0, -1, 'not equal';
 };
-my $call = $g->calls_most_recent;
-undef $g;
 
-my $fail = $event->[0];
+my $fail = $events->[0];
+my $raw_message = length $fail->{info}->[0]->{details} ? "not equal\n" . $fail->{info}->[0]->{details} : 'not equal';
+my $message = "::error file=$file,line=$line\::" . Test2::Plugin::GitHub::Actions::AnnotateFailedTest::_escape_data($raw_message) . "\n";
 
-my $message = length $fail->{info}->[0]->{details} ? "not equal\n" . $fail->{info}->[0]->{details} : 'not equal';
-
-is $call, [$file, $line, $message], 'annotate with details';
+is $events, array {
+    event 'Fail';
+    event Output => sub {
+        field stream_name => 'STDERR';
+        call message => $message;
+    };
+    end;
+};
 
 done_testing;

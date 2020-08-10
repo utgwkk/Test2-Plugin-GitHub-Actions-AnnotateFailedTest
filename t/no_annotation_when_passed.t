@@ -1,11 +1,8 @@
 use strict;
 use warnings;
 use Test2::V0;
-use Module::Spy qw(spy_on);
 
-my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
-
-intercept {
+my $events = intercept {
     local $ENV{GITHUB_ACTIONS} = 'true';
     require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
     Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
@@ -15,6 +12,11 @@ intercept {
     pass 'ok';
 };
 
-ok ! $g->called, 'no annotation';
+is $events, array {
+    event 'Ok';
+    event 'Ok';
+    event 'Ok';
+    end;
+};
 
 done_testing;

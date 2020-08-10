@@ -1,11 +1,8 @@
 use strict;
 use warnings;
 use Test2::V0;
-use Module::Spy qw(spy_on);
 
-my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
-
-intercept {
+my $events = intercept {
     local $ENV{GITHUB_ACTIONS} = undef;
     require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
     Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
@@ -13,6 +10,9 @@ intercept {
     ok 0, 'failed';
 };
 
-ok ! $g->called, 'disabled when not in GitHub Actions';
+is $events, array {
+    fail_events 'Ok';
+    end;
+};
 
 done_testing;

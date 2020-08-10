@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 use Test2::V0;
-use Module::Spy qw(spy_on);
+use Test2::Plugin::IOEvents;
+use Test2::API qw(test2_reset_io);
+test2_reset_io();
 
 my $file = __FILE__;
 my $line;
 
-my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
-
-my $event = intercept {
+my $events = intercept {
     local $ENV{GITHUB_ACTIONS} = 'true';
     require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
     Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
@@ -16,13 +16,15 @@ my $event = intercept {
     $line = __LINE__ + 1;
     ok 0;
 };
-my $call = $g->calls_most_recent;
-undef $g;
 
-like $event, array {
-    item event 'Ok';
+is $events, array {
+    event 'Ok';
+    event Output => sub {
+        field stream_name => 'STDERR';
+        call message => "::error file=$file,line=$line\::Test failed\n";
+    };
+    event 'Diag';
+    end;
 };
-
-is $call, [$file, $line, 'Test failed'], 'annotate with error';
 
 done_testing;
