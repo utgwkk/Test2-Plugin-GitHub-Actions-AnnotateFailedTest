@@ -1,0 +1,28 @@
+use strict;
+use warnings;
+use Test2::V0;
+use Module::Spy qw(spy_on);
+
+my $file = __FILE__;
+my $line;
+
+my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
+
+my $event = intercept {
+    local $ENV{GITHUB_ACTIONS} = 'true';
+    require Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
+    Test2::Plugin::GitHub::Actions::AnnotateFailedTest->import;
+
+    $line = __LINE__ + 1;
+    is 0, -1, 'not equal', '0 is not 1', 'oops!';
+};
+my $call = $g->calls_most_recent;
+undef $g;
+
+my $fail = $event->[0];
+
+my $message = (length $fail->{info}->[0]->{details} ? "not equal\n" . $fail->{info}->[0]->{details} : 'not equal') . "\n0 is not 1\noops!";
+
+is $call, [$file, $line, $message], 'annotate with details and diag';
+
+done_testing;
