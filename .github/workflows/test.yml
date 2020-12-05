@@ -28,4 +28,6 @@ jobs:
 
       - run: cpanm -L local --notest --installdeps .
 
-      - run: prove -Ilocal/lib/perl5 -Ilib -lv t
+      - run: prove -lv t
+        env:
+          PERL5OPT: -Ilocal/lib/perl5 -Ilib -MTest2::Plugin::GitHub::Actions::AnnotateFailedTest
