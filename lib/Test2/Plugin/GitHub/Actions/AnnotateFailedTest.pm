@@ -15,14 +15,15 @@ our $VERSION = "0.04";
 
 sub import {
     my ($class) = @_;
-
     return unless $ENV{GITHUB_ACTIONS};
-    state $loaded = 0; # avoid multiple callback addition
-    return if $loaded;
-    $loaded++;
+
+    state %loaded ; # avoid multiple callback additions per Test2::Hub
 
     test2_add_callback_post_load(sub {
         my $hub = test2_stack()->top;
+        return if $loaded{$hub->hid};
+        $loaded{$hub->hid}++;
+
         $hub->listen(\&listener, inherit => 1);
     });
 }
