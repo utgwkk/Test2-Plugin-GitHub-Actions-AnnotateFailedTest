@@ -73,7 +73,8 @@
    },
    "version" : "0.04",
    "x_contributors" : [
-      "hitode909 <hitode909@gmail.com>"
+      "hitode909 <hitode909@gmail.com>",
+      "FUJI Goro <goro@fastly.com>"
    ],
    "x_serialization_backend" : "JSON::PP version 4.02",
    "x_static_install" : 1
