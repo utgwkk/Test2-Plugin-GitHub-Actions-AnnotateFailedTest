@@ -3,6 +3,8 @@ use warnings;
 use Test2::V0;
 use Module::Spy qw(spy_on);
 
+use Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
+
 my $g = spy_on('Test2::Plugin::GitHub::Actions::AnnotateFailedTest', '_issue_error');
 
 intercept {

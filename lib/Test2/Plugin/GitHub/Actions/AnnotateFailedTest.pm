@@ -40,7 +40,32 @@ sub listener {
     my $details = _extract_details_from_event($event);
     my $message = encode_utf8(join "\n", grep { defined } ($summary, $details)); # avoid Wide character in print warning
 
-    _issue_error($file, $line, $message);
+    my $file_context = "";
+    if ($trace->file and $trace->line) {
+        $file_context = _read_file_context($trace->file, $trace->line);
+        if (length $file_context) {
+            $file_context .= "\n";
+        }
+    }
+
+    _issue_error($file, $line, $message, $file_context);
+}
+
+sub _read_file_context {
+    my ($file, $line) = @_;
+    my $context = "";
+    if (open my $in, "<", $INC{$file} // $file) {
+        my $width = length("$line") + 1;
+        my ($min, $max) = ($line -  1, $line + 1);
+        while (defined(my $s = <$in>)) {
+            if ($min <= $. and $. <= $max) {
+                my $marker  = $. == $line ? "*" : ":";
+                chomp $s; # it's not guaranteed to have a newline, so make sure it doesn't
+                $context .= sprintf "%0*d%s %s\n", $width, $., $marker, $s;
+            }
+        }
+    }
+    return $context;
 }
 
 sub _extract_summary_from_event {
@@ -63,12 +88,17 @@ sub _extract_details_from_event {
     return join "\n", map { $_->{details} } @{$event->{info}};
 }
 
+# Issue a GitHub Actions error command.
+#
+# See also Workflow commands for GitHub Actions:
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#setting-an-error-message
 sub _issue_error {
-    my ($file, $line, $detail) = @_;
+    my ($file, $line, $detail, $file_context) = @_;
 
     my $stderr = test2_stderr();
 
-    $stderr->printf("::error file=%s,line=%d::%s\n", $file, $line, _escape_data($detail));
+    $stderr->printf("::error file=%s,line=%d::%s\n",
+        $file, $line, _escape_data($file_context . $detail));
 }
 
 # escape a message of workflow command.

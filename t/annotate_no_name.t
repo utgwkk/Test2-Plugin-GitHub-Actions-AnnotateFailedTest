@@ -3,6 +3,8 @@ use warnings;
 use Test2::V0;
 use Module::Spy qw(spy_on);
 
+use Test2::Plugin::GitHub::Actions::AnnotateFailedTest;
+
 my $file = __FILE__;
 my $line;
 
@@ -17,6 +19,7 @@ my $event = intercept {
     ok 0;
 };
 my $call = $g->calls_most_recent;
+pop @$call; # pop the last arg $file_context
 undef $g;
 
 like $event, array {
